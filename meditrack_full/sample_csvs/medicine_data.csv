@@ -1,0 +1,60 @@
+name,quantity,expiry,pharmacy_email
+Paracetamol 500mg,50,2027-01-15,apollohyd@gmail.com
+Paracetamol 500mg,60,2027-02-10,medplushyd@gmail.com
+Paracetamol 500mg,70,2027-03-05,netmedshyd@gmail.com
+Paracetamol 500mg,40,2027-04-01,hpharmahyd@gmail.com
+Paracetamol 500mg,30,2027-05-12,citycarehyd@gmail.com
+
+Amoxicillin 500mg,45,2026-12-15,apollohyd@gmail.com
+Amoxicillin 500mg,50,2026-11-18,medplushyd@gmail.com
+Amoxicillin 500mg,55,2026-11-22,netmedshyd@gmail.com
+Amoxicillin 500mg,60,2026-10-20,hpharmahyd@gmail.com
+Amoxicillin 500mg,30,2026-09-25,trusthyd@gmail.com
+
+Amlodipine 5mg,40,2027-02-18,urbanmedhyd@gmail.com
+Amlodipine 5mg,45,2027-03-02,apollohyd@gmail.com
+Amlodipine 5mg,50,2027-01-29,medplushyd@gmail.com
+
+Atorvastatin 10mg,30,2027-04-12,netmedshyd@gmail.com
+Atorvastatin 10mg,35,2027-02-14,medzonehyd@gmail.com
+Atorvastatin 10mg,40,2027-03-11,myhealthhyd@gmail.com
+
+Omeprazole 20mg,25,2026-12-20,apollohyd@gmail.com
+Omeprazole 20mg,30,2026-12-22,greenmedhyd@gmail.com
+Omeprazole 20mg,35,2026-12-28,medplushyd@gmail.com
+Omeprazole 20mg,20,2026-11-25,smartmedhyd@gmail.com
+
+Cetrizine 10mg,40,2027-05-20,medzonehyd@gmail.com
+Cetrizine 10mg,42,2027-05-25,netmedshyd@gmail.com
+Cetrizine 10mg,38,2027-06-01,hpharmahyd@gmail.com
+
+Metformin 500mg,50,2027-03-18,apollohyd@gmail.com
+Metformin 500mg,60,2027-04-11,urbanmedhyd@gmail.com
+Metformin 500mg,55,2027-05-01,netmedshyd@gmail.com
+Metformin 500mg,45,2027-02-23,citycarehyd@gmail.com
+
+Losartan 50mg,30,2026-10-05,trusthyd@gmail.com
+Losartan 50mg,35,2026-11-12,myhealthhyd@gmail.com
+Losartan 50mg,25,2026-12-01,medzonehyd@gmail.com
+
+Montelukast 10mg,45,2026-08-20,apollohyd@gmail.com
+Montelukast 10mg,35,2026-09-15,netmedshyd@gmail.com
+Montelukast 10mg,30,2026-09-30,hpharmahyd@gmail.com
+
+Pantoprazole 40mg,50,2026-07-05,medzonehyd@gmail.com
+Pantoprazole 40mg,40,2026-06-22,carehyd@gmail.com
+Pantoprazole 40mg,45,2026-07-10,apollohyd@gmail.com
+Pantoprazole 40mg,35,2026-07-18,urbanmedhyd@gmail.com
+
+Ciprofloxacin 500mg,22,2025-11-01,medplushyd@gmail.com
+Ciprofloxacin 500mg,28,2025-11-05,citycarehyd@gmail.com
+Ciprofloxacin 500mg,25,2025-11-03,greenmedhyd@gmail.com
+Ciprofloxacin 500mg,20,2025-11-02,trusthyd@gmail.com
+
+Furosemide 40mg,25,2026-07-18,medzonehyd@gmail.com
+Furosemide 40mg,30,2026-08-10,healcurehyd@gmail.com
+Furosemide 40mg,28,2026-09-05,smartmedhyd@gmail.com
+
+Azithromycin 250mg,24,2027-02-01,medplushyd@gmail.com
+Azithromycin 250mg,30,2027-02-12,apollohyd@gmail.com
+Azithromycin 250mg,28,2027-02-05,citycarehyd@gmail.com
