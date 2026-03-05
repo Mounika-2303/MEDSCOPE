@@ -1,0 +1,90 @@
+medicine_name,batch_no,quantity,expiry_date,distributor_name,purchase_date,pharmacy_email
+Paracetamol 500mg,BT101,50,2027-01-15,ABC Distributors,2025-01-10,apollohyd@gmail.com
+Paracetamol 500mg,BT102,60,2027-02-10,MedLife Distributors,2025-01-10,medplushyd@gmail.com
+Paracetamol 500mg,BT103,70,2027-03-05,MedLife Distributors,2025-01-10,netmedshyd@gmail.com
+Paracetamol 500mg,BT104,40,2027-04-01,PharmaOne,2025-01-10,hpharmahyd@gmail.com
+Paracetamol 500mg,BT105,30,2027-05-12,PharmaOne,2025-01-10,citycarehyd@gmail.com
+Amoxicillin 500mg,BT201,45,2026-12-15,Medico Pvt Ltd,2025-01-10,apollohyd@gmail.com
+Amoxicillin 500mg,BT202,50,2026-11-18,Medico Pvt Ltd,2025-01-10,medplushyd@gmail.com
+Amoxicillin 500mg,BT203,55,2026-11-22,HealthCorp,2025-01-10,netmedshyd@gmail.com
+Amoxicillin 500mg,BT204,60,2026-10-20,HealthCorp,2025-01-10,hpharmahyd@gmail.com
+Amoxicillin 500mg,BT205,30,2026-09-25,HealthCorp,2025-01-10,trusthyd@gmail.com
+Amlodipine 5mg,BT301,40,2027-02-18,Wellness Distributors,2025-01-10,urbanmedhyd@gmail.com
+Amlodipine 5mg,BT302,45,2027-03-02,Wellness Distributors,2025-01-10,apollohyd@gmail.com
+Amlodipine 5mg,BT303,50,2027-01-29,HealthCorp,2025-01-10,medplushyd@gmail.com
+Atorvastatin 10mg,BT401,30,2027-04-12,PrimeMed,2025-01-10,netmedshyd@gmail.com
+Atorvastatin 10mg,BT402,35,2027-02-14,PrimeMed,2025-01-10,medzonehyd@gmail.com
+Atorvastatin 10mg,BT403,40,2027-03-11,PrimeMed,2025-01-10,myhealthhyd@gmail.com
+Omeprazole 20mg,BT501,25,2026-12-20,HealthyLife,2025-01-10,apollohyd@gmail.com
+Omeprazole 20mg,BT502,30,2026-12-22,HealthyLife,2025-01-10,greenmedhyd@gmail.com
+Omeprazole 20mg,BT503,35,2026-12-28,HealthyLife,2025-01-10,medplushyd@gmail.com
+Omeprazole 20mg,BT504,20,2026-11-25,HealthyLife,2025-01-10,smartmedhyd@gmail.com
+Cetrizine 10mg,BT601,40,2027-05-20,AllergyMed,2025-01-10,medzonehyd@gmail.com
+Cetrizine 10mg,BT602,42,2027-05-25,AllergyMed,2025-01-10,netmedshyd@gmail.com
+Cetrizine 10mg,BT603,38,2027-06-01,AllergyMed,2025-01-10,hpharmahyd@gmail.com
+Metformin 500mg,BT701,50,2027-03-18,DiabeCare,2025-01-10,apollohyd@gmail.com
+Metformin 500mg,BT702,60,2027-04-11,DiabeCare,2025-01-10,urbanmedhyd@gmail.com
+Metformin 500mg,BT703,55,2027-05-01,DiabeCare,2025-01-10,netmedshyd@gmail.com
+Metformin 500mg,BT704,45,2027-02-23,DiabeCare,2025-01-10,citycarehyd@gmail.com
+Losartan 50mg,BT801,30,2026-10-05,HeartMed,2025-01-10,trusthyd@gmail.com
+Losartan 50mg,BT802,35,2026-11-12,HeartMed,2025-01-10,myhealthhyd@gmail.com
+Losartan 50mg,BT803,25,2026-12-01,HeartMed,2025-01-10,medzonehyd@gmail.com
+Pantoprazole 40mg,BT1001,50,2026-07-05,DigestMed,2025-01-10,medzonehyd@gmail.com
+Pantoprazole 40mg,BT1002,40,2026-06-22,DigestMed,2025-01-10,carehyd@gmail.com
+Pantoprazole 40mg,BT1003,45,2026-07-10,DigestMed,2025-01-10,apollohyd@gmail.com
+Pantoprazole 40mg,BT1004,35,2026-07-18,DigestMed,2025-01-10,urbanmedhyd@gmail.com
+Ciprofloxacin 500mg,BT1101,22,2025-11-01,InfectoCare,2025-01-10,medplushyd@gmail.com
+Ciprofloxacin 500mg,BT1102,28,2025-11-05,InfectoCare,2025-01-10,citycarehyd@gmail.com
+Ciprofloxacin 500mg,BT1103,25,2025-11-03,InfectoCare,2025-01-10,greenmedhyd@gmail.com
+Ciprofloxacin 500mg,BT1104,20,2025-11-02,InfectoCare,2025-01-10,trusthyd@gmail.com
+Furosemide 40mg,BT1201,25,2026-07-18,WaterMed,2025-01-10,medzonehyd@gmail.com
+Furosemide 40mg,BT1202,30,2026-08-10,WaterMed,2025-01-10,healcurehyd@gmail.com
+Furosemide 40mg,BT1203,28,2026-09-05,WaterMed,2025-01-10,smartmedhyd@gmail.com
+Azithromycin 250mg,BT1301,24,2027-02-01,InfectoCare,2025-01-10,medplushyd@gmail.com
+Azithromycin 250mg,BT1302,30,2027-02-12,InfectoCare,2025-01-10,apollohyd@gmail.com
+Azithromycin 250mg,BT1303,28,2027-02-05,InfectoCare,2025-01-10,citycarehyd@gmail.com
+Amoxicillin-Clavulanate 625mg,BT1401,10,2024-09-15,HealthCorp,2024-03-01,netmedshyd@gmail.com
+Prednisolone 10mg,BT1402,15,2025-11-06,CarePharma,2025-01-10,medzonehyd@gmail.com
+Clarithromycin 500mg,BT1403,12,2025-11-05,SunPharma,2025-01-10,apollohyd@gmail.com
+Telmisartan 40mg,BT1404,18,2025-11-08,HeartMed,2025-01-10,medzonehyd@gmail.com
+Erythromycin 250mg,BT1405,10,2025-10-28,CarePharma,2025-01-10,apollohyd@gmail.com
+Dolo 650mg,BT1501,45,2027-06-15,Micro Labs,2025-01-10,localshop1@gmail.com
+Dolo 650mg,BT1502,50,2027-07-20,Micro Labs,2025-01-10,localshop2@gmail.com
+Dolo 650mg,BT1503,40,2027-08-10,Micro Labs,2025-01-10,localshop3@gmail.com
+Dolo 650mg,BT1504,35,2027-06-25,Micro Labs,2025-01-10,localshop4@gmail.com
+Dolo 650mg,BT1505,55,2027-07-05,Micro Labs,2025-01-10,localshop5@gmail.com
+Dolo 650mg,BT1506,42,2027-08-15,Micro Labs,2025-01-10,localshop6@gmail.com
+Dolo 650mg,BT1507,38,2027-07-30,Micro Labs,2025-01-10,localshop7@gmail.com
+Dolo 650mg,BT1508,48,2027-08-20,Micro Labs,2025-01-10,localshop8@gmail.com
+Dolo 650mg,BT1509,30,2027-06-30,Micro Labs,2025-01-10,localshop9@gmail.com
+Dolo 650mg,BT1510,52,2027-08-05,Micro Labs,2025-01-10,localshop10@gmail.com
+Dolo 650mg,BT1511,25,2027-06-10,Micro Labs,2025-01-10,apollohyd@gmail.com
+Dolo 650mg,BT1512,28,2027-07-15,Micro Labs,2025-01-10,medplushyd@gmail.com
+Paracetamol 500mg,BT1011,60,2027-05-20,ABC Distributors,2025-01-10,localshop1@gmail.com
+Paracetamol 500mg,BT1012,55,2027-06-10,ABC Distributors,2025-01-10,localshop2@gmail.com
+Paracetamol 500mg,BT1013,50,2027-05-25,ABC Distributors,2025-01-10,localshop3@gmail.com
+Crocin 500mg,BT1601,40,2027-09-15,GSK Pharma,2025-01-10,localshop1@gmail.com
+Crocin 500mg,BT1602,45,2027-09-20,GSK Pharma,2025-01-10,localshop2@gmail.com
+Crocin 500mg,BT1603,35,2027-10-05,GSK Pharma,2025-01-10,localshop3@gmail.com
+Crocin 500mg,BT1604,42,2027-09-30,GSK Pharma,2025-01-10,localshop4@gmail.com
+Crocin 500mg,BT1605,38,2027-10-10,GSK Pharma,2025-01-10,localshop5@gmail.com
+Calpol 500mg,BT1701,50,2027-08-15,GSK Pharma,2025-01-10,localshop6@gmail.com
+Calpol 500mg,BT1702,45,2027-08-25,GSK Pharma,2025-01-10,localshop7@gmail.com
+Calpol 500mg,BT1703,40,2027-09-05,GSK Pharma,2025-01-10,localshop8@gmail.com
+Calpol 500mg,BT1704,48,2027-08-20,GSK Pharma,2025-01-10,localshop9@gmail.com
+Calpol 500mg,BT1705,35,2027-09-10,GSK Pharma,2025-01-10,localshop10@gmail.com
+Disprin 350mg,BT1801,30,2027-07-20,Reckitt Benckiser,2025-01-10,localshop1@gmail.com
+Disprin 350mg,BT1802,28,2027-08-05,Reckitt Benckiser,2025-01-10,localshop2@gmail.com
+Disprin 350mg,BT1803,32,2027-07-30,Reckitt Benckiser,2025-01-10,localshop3@gmail.com
+Disprin 350mg,BT1804,25,2027-08-15,Reckitt Benckiser,2025-01-10,localshop4@gmail.com
+Disprin 350mg,BT1805,30,2027-08-25,Reckitt Benckiser,2025-01-10,localshop5@gmail.com
+Combiflam,BT1901,40,2027-10-15,Sanofi,2025-01-10,localshop6@gmail.com
+Combiflam,BT1902,35,2027-10-20,Sanofi,2025-01-10,localshop7@gmail.com
+Combiflam,BT1903,42,2027-11-05,Sanofi,2025-01-10,localshop8@gmail.com
+Combiflam,BT1904,38,2027-10-30,Sanofi,2025-01-10,localshop9@gmail.com
+Combiflam,BT1905,45,2027-11-10,Sanofi,2025-01-10,localshop10@gmail.com
+Vicks Action 500mg,BT2001,25,2027-09-15,Procter & Gamble,2025-01-10,localshop1@gmail.com
+Vicks Action 500mg,BT2002,22,2027-09-25,Procter & Gamble,2025-01-10,localshop2@gmail.com
+Vicks Action 500mg,BT2003,28,2027-10-05,Procter & Gamble,2025-01-10,localshop3@gmail.com
+Vicks Action 500mg,BT2004,30,2027-09-30,Procter & Gamble,2025-01-10,localshop4@gmail.com
+Vicks Action 500mg,BT2005,26,2027-10-15,Procter & Gamble,2025-01-10,localshop5@gmail.com

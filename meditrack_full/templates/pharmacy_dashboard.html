@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pharmacy Dashboard | MedScope</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .medicine-item { padding: .5rem 1rem; }
+    .table-fixed { table-layout: fixed; word-wrap: break-word; }
+  </style>
+</head>
+<body class="container mt-3">
+  {% include 'navbar.html' %}
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="m-0 text-primary">Pharmacy Dashboard</h2>
+    <small class="text-muted">Logged in as: {{ pharmacy_email }}</small>
+  </div>
+
+  <!-- Upload / Action Message -->
+  {% if message %}
+  <div class="alert {% if '❌' in message %}alert-danger{% elif '⚠️' in message %}alert-warning{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+
+  <!-- Expired Medicine Warning -->
+  {% if counts.get('Expired', 0) > 0 %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <h5 class="alert-heading">🚨 EXPIRED MEDICINES DETECTED!</h5>
+    <p class="mb-0">
+      You have <strong>{{ counts.get('Expired', 0) }} expired medicine(s)</strong> in your stock. 
+      <strong>These cannot be sold.</strong> Please remove them from stock using the "Remove from Stock" button.
+    </p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-success">Available</h5>
+          <h2 class="text-success">{{ counts.get('Available', 0) }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-warning">Expiring Soon</h5>
+          <h2 class="text-warning">{{ counts.get('Expiring Soon', 0) }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-danger">Expired</h5>
+          <h2 class="text-danger">{{ counts.get('Expired', 0) }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie Chart -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <strong>Medicine Status Distribution</strong>
+        </div>
+        <div class="card-body">
+          <canvas id="statusChart" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <strong>📈 Demand Forecast (next 30 days)</strong>
+        </div>
+        <div class="card-body">
+          <p class="text-muted small mb-2">Based on your recent sales. Helps avoid overstocking.</p>
+          <div id="forecastLoading" class="text-muted">Loading...</div>
+          <div id="forecastContent" style="display: none;">
+            <table class="table table-sm table-hover mb-0">
+              <thead><tr><th>Medicine</th><th>Daily avg</th><th>Forecast 30d</th></tr></thead>
+              <tbody id="forecastTable"></tbody>
+            </table>
+            <p id="forecastEmpty" class="text-muted small mb-0 mt-2" style="display: none;">No sales history yet. Forecast will appear after you make sales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load invoice sheet (primary: distributor sends invoice sheets to pharmacy) -->
+  <div class="card mb-4 shadow-sm border-primary">
+    <div class="card-header bg-primary text-white">
+      <strong>📄 Load invoice sheet</strong>
+      <small class="d-block opacity-90">Distributors send invoice sheets to pharmacies. Upload the sheet (CSV) here to update your stock.</small>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title">Invoice / ERP format (recommended)</h6>
+              <form method="POST" action="/upload_erp_csv" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <input type="file" name="file" accept=".csv" class="form-control" required>
+                <button class="btn btn-primary">Load invoice sheet</button>
+              </form>
+              <small class="text-muted d-block mt-2">Columns: <code>medicine_name, batch_no, quantity, expiry_date, distributor_name, purchase_date, pharmacy_email</code></small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h6 class="card-title">Simple format</h6>
+              <form method="POST" action="/upload_csv" enctype="multipart/form-data" class="d-flex flex-column gap-2">
+                <input type="file" name="file" accept=".csv" class="form-control" required>
+                <button class="btn btn-outline-primary">Upload CSV</button>
+              </form>
+              <small class="text-muted d-block mt-2">Columns: <code>name, quantity, expiry, pharmacy_email</code></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add one item (optional, collapsible) -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#addOneCollapse" aria-expanded="false">
+      <span class="me-2">➕</span> Add one medicine manually <small class="text-muted ms-2">(optional)</small>
+    </div>
+    <div class="collapse" id="addOneCollapse">
+      <div class="card-body">
+        <form method="POST" class="row g-2">
+          <div class="col-md-4">
+            <input class="form-control" name="medicine" placeholder="Medicine name" required>
+          </div>
+          <div class="col-md-2">
+            <input type="number" class="form-control" name="quantity" placeholder="Qty" required min="0">
+          </div>
+          <div class="col-md-3">
+            <input type="date" class="form-control" name="expiry" required>
+          </div>
+          <div class="col-md-3 text-end">
+            <button class="btn btn-success">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medicines Table -->
+  <div class="card mt-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <strong>Available Medicines</strong>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover table-bordered table-fixed m-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width:24%;">Name</th>
+            <th style="width:6%;">Qty</th>
+            <th style="width:10%;">Expiry</th>
+            <th style="width:10%;">Status</th>
+            <th style="width:12%;">Discount</th>
+            <th style="width:10%;">Valid till</th>
+            <th style="width:28%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if medicines %}
+            {% for med in medicines %}
+              <tr class="{% if med.status == 'Expired' %}table-danger{% elif med.status == 'Expiring Soon' %}table-warning{% endif %}">
+                <td class="align-middle medicine-item">
+                  <strong>{{ med.name }}</strong>
+                  {% if med.status == 'Expired' %}
+                    <br><small class="text-danger fw-bold">🚨 EXPIRED - DO NOT SELL</small>
+                  {% endif %}
+                </td>
+                <td class="align-middle">{{ med.quantity }}</td>
+                <td class="align-middle">{{ med.expiry or 'N/A' }}</td>
+                <td class="align-middle">
+                  {% if med.status == 'Expired' %}
+                    <span class="badge bg-danger">{{ med.status }}</span>
+                  {% elif med.status == 'Expiring Soon' %}
+                    <span class="badge bg-warning text-dark">{{ med.status }}</span>
+                  {% else %}
+                    <span class="badge bg-success">{{ med.status }}</span>
+                  {% endif %}
+                </td>
+                <td class="align-middle">
+                  {% if med.get('discount_value') is not none and med.get('discount_valid_till') %}
+                    {{ med.discount_value }}{% if (med.discount_type or 'percentage') == 'percentage' %}%{% else %} Rs flat{% endif %}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+                <td class="align-middle">{{ med.discount_valid_till or '—' }}</td>
+                <td class="align-middle">
+                  <div class="d-flex flex-wrap gap-1 align-items-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm discount-btn"
+                            data-doc-id="{{ med.doc_id }}"
+                            data-medicine-name="{{ med.name }}"
+                            data-discount-value="{{ med.discount_value or '' }}"
+                            data-discount-type="{{ med.discount_type or 'percentage' }}"
+                            data-discount-valid-till="{{ med.discount_valid_till or '' }}">
+                      🏷️ Discount
+                    </button>
+                    {% if med.status == 'Expired' %}
+                      <button class="btn btn-danger btn-sm remove-expired-btn" 
+                              data-doc-id="{{ med.doc_id }}" 
+                              data-medicine-name="{{ med.name }}">
+                        🗑️ Remove
+                      </button>
+                    {% else %}
+                      <input type="number" class="form-control form-control-sm" id="qty-{{ med.doc_id }}" value="1" min="1" max="{{ med.quantity }}" style="width: 55px;">
+                      <button class="btn btn-success btn-sm quick-sell-btn" 
+                              data-doc-id="{{ med.doc_id }}" 
+                              data-medicine-name="{{ med.name }}"
+                              data-quantity="{{ med.quantity }}">
+                        ✅ Sell
+                      </button>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="7" class="text-center p-3">No medicines found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Discount Modal -->
+  <div class="modal fade" id="discountModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Set / Edit Discount</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-2"><strong id="discountMedName"></strong></p>
+          <input type="hidden" id="discountDocId" value="">
+          <div class="mb-2">
+            <label class="form-label">Discount type</label>
+            <select class="form-select" id="discountType">
+              <option value="percentage">Percentage (%)</option>
+              <option value="flat">Flat (Rs)</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Discount value</label>
+            <input type="number" class="form-control" id="discountValue" min="0" step="0.01" placeholder="e.g. 10 or 50">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Valid till (date)</label>
+            <input type="date" class="form-control" id="discountValidTill" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger me-auto" id="discountRemoveBtn">Remove discount</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="discountSaveBtn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Container for Messages -->
+  <div id="alertContainer" style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;"></div>
+
+  <!-- Bootstrap JS must load before our script (discount modal uses bootstrap.Modal) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Pie Chart with correct colors: Expired=Red, Expiring Soon=Orange
+    // Demand forecast: fetch and render
+    (function() {
+      const loading = document.getElementById('forecastLoading');
+      const content = document.getElementById('forecastContent');
+      const tableBody = document.getElementById('forecastTable');
+      const emptyMsg = document.getElementById('forecastEmpty');
+      fetch('/pharmacy/forecast')
+        .then(r => r.json())
+        .then(data => {
+          loading.style.display = 'none';
+          content.style.display = 'block';
+          const forecasts = data.forecasts || [];
+          if (forecasts.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+          }
+          forecasts.slice(0, 10).forEach(f => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${escapeHtml(f.medicine_name)}</td><td>${f.daily_avg}</td><td>${f.forecast_total}</td>`;
+            tableBody.appendChild(tr);
+          });
+        })
+        .catch(() => {
+          loading.textContent = 'Forecast unavailable';
+          content.style.display = 'block';
+        });
+      function escapeHtml(s) {
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+    })();
+
+    const ctx = document.getElementById('statusChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Available', 'Expiring Soon', 'Expired'],
+          datasets: [{
+            data: [
+              {{ counts.get('Available', 0) }},
+              {{ counts.get('Expiring Soon', 0) }},
+              {{ counts.get('Expired', 0) }}
+            ],
+            backgroundColor: [
+              '#28a745',  // Green for Available
+              '#ff9800',  // Orange for Expiring Soon
+              '#dc3545'   // Red for Expired
+            ],
+            borderColor: [
+              '#1e7e34',
+              '#f57c00',
+              '#c82333'
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // Show alert message
+    function showAlert(message, type = 'success') {
+      const alertContainer = document.getElementById('alertContainer');
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      alertContainer.appendChild(alertDiv);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
+
+    // Quick Sell functionality
+    document.querySelectorAll('.quick-sell-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const docId = this.getAttribute('data-doc-id');
+        const medicineName = this.getAttribute('data-medicine-name');
+        const maxQty = parseInt(this.getAttribute('data-quantity'));
+        const qtyInput = document.getElementById('qty-' + docId);
+        const quantity = parseInt(qtyInput.value) || 1;
+        
+        if (quantity < 1) {
+          showAlert('Quantity must be at least 1', 'warning');
+          return;
+        }
+        
+        if (quantity > maxQty) {
+          showAlert(`Only ${maxQty} units available`, 'warning');
+          return;
+        }
+        
+        // Confirm sale
+        if (!confirm(`Sell ${quantity} unit(s) of ${medicineName}?`)) {
+          return;
+        }
+        
+        // Send request
+        const formData = new FormData();
+        formData.append('doc_id', docId);
+        formData.append('medicine_name', medicineName);
+        formData.append('quantity', quantity);
+        
+        fetch('/quick_sell', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showAlert(data.error, 'danger');
+          }
+        })
+        .catch(error => {
+          showAlert('Error: ' + error.message, 'danger');
+        });
+      });
+    });
+
+    // Remove Expired functionality
+    document.querySelectorAll('.remove-expired-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const docId = this.getAttribute('data-doc-id');
+        const medicineName = this.getAttribute('data-medicine-name');
+        
+        if (!confirm(`Remove expired ${medicineName} from stock? This action cannot be undone.`)) {
+          return;
+        }
+        
+        const formData = new FormData();
+        formData.append('doc_id', docId);
+        
+        fetch('/remove_expired', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showAlert(data.error, 'danger');
+          }
+        })
+        .catch(error => {
+          showAlert('Error: ' + error.message, 'danger');
+        });
+      });
+    });
+
+    // Discount modal: open and fill
+    const discountModal = new bootstrap.Modal(document.getElementById('discountModal'));
+    document.querySelectorAll('.discount-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.getElementById('discountDocId').value = this.getAttribute('data-doc-id');
+        document.getElementById('discountMedName').textContent = this.getAttribute('data-medicine-name');
+        document.getElementById('discountType').value = this.getAttribute('data-discount-type') || 'percentage';
+        document.getElementById('discountValue').value = this.getAttribute('data-discount-value') || '';
+        document.getElementById('discountValidTill').value = this.getAttribute('data-discount-valid-till') || '';
+        discountModal.show();
+      });
+    });
+
+    document.getElementById('discountSaveBtn').addEventListener('click', function() {
+      const docId = document.getElementById('discountDocId').value;
+      const value = document.getElementById('discountValue').value.trim();
+      const validTill = document.getElementById('discountValidTill').value;
+      if (!value || !validTill) {
+        showAlert('Enter discount value and valid till date.', 'warning');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('doc_id', docId);
+      formData.append('discount_value', value);
+      formData.append('discount_type', document.getElementById('discountType').value);
+      formData.append('discount_valid_till', validTill);
+      fetch('/pharmacy/discount/set', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success');
+            discountModal.hide();
+            setTimeout(() => location.reload(), 800);
+          } else {
+            showAlert(data.error || 'Failed', 'danger');
+          }
+        })
+        .catch(e => showAlert('Error: ' + e.message, 'danger'));
+    });
+
+    document.getElementById('discountRemoveBtn').addEventListener('click', function() {
+      const docId = document.getElementById('discountDocId').value;
+      if (!confirm('Remove discount for this medicine?')) return;
+      const formData = new FormData();
+      formData.append('doc_id', docId);
+      fetch('/pharmacy/discount/remove', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            showAlert(data.message, 'success');
+            discountModal.hide();
+            setTimeout(() => location.reload(), 800);
+          } else {
+            showAlert(data.error || 'Failed', 'danger');
+          }
+        })
+        .catch(e => showAlert('Error: ' + e.message, 'danger'));
+    });
+  </script>
+</body>
+</html>
