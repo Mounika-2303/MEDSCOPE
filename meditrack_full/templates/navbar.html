@@ -9,11 +9,15 @@
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
         {% if session.get('user_role') == 'pharmacy' %}
         <li class="nav-item"><a class="nav-link" href="/pharmacy">Pharmacy Dashboard</a></li>
+<<<<<<< HEAD
         <li class="nav-item"><a class="nav-link" href="/pharmacy/orders">📦 Orders</a></li>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
         <li class="nav-item"><a class="nav-link" href="/billing">Billing</a></li>
         {% elif session.get('user_role') == 'admin' %}
         <li class="nav-item"><a class="nav-link" href="/admin">Admin Dashboard</a></li>
         {% endif %}
+<<<<<<< HEAD
         {% if session.get('user_role') == 'user' or not session.get('user_role') %}
         <li class="nav-item"><a class="nav-link" href="/map">🔍 Search Map</a></li>
         <li class="nav-item"><a class="nav-link" href="/user">📋 Quick Search</a></li>
@@ -22,6 +26,10 @@
         <li class="nav-item"><a class="nav-link" href="/orders">My Orders</a></li>
         {% endif %}
         {% endif %}
+=======
+        <li class="nav-item"><a class="nav-link" href="/map">🔍 Search Map</a></li>
+        <li class="nav-item"><a class="nav-link" href="/user">📋 Quick Search</a></li>
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
       </ul>
       <ul class="navbar-nav">
         {% if session.get('user_email') %}

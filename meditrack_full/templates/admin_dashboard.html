@@ -62,9 +62,12 @@
     <form action="{{ url_for('admin_send_alerts_now') }}" method="POST" class="d-inline ms-2">
       <button type="submit" class="btn btn-outline-success">📧 Send expiry alerts now</button>
     </form>
+<<<<<<< HEAD
     <form action="{{ url_for('admin_run_discount_cleanup') }}" method="POST" class="d-inline ms-2">
       <button type="submit" class="btn btn-outline-secondary">🏷️ Run discount cleanup now</button>
     </form>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
     <button type="button" class="btn btn-outline-warning ms-2" id="verifyAuditBtn">🔗 Verify audit chain</button>
     <span id="verifyAuditResult" class="ms-2"></span>
     <small class="text-muted ms-2">Use this to test email delivery to pharmacies (expired / expiring soon).</small>
@@ -76,6 +79,7 @@
       <span class="badge bg-secondary ms-2">{{ pending_pharmacies|length }} pending</span>
     </div>
     <div class="card-body">
+<<<<<<< HEAD
       <div class="mb-2">
         <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#licenseVerifyGuide">📋 How to verify license number</button>
         <div class="collapse mt-2" id="licenseVerifyGuide">
@@ -93,6 +97,11 @@
           </div>
         </div>
       </div>
+=======
+      <p class="small text-muted mb-2">
+        <strong>How to verify:</strong> Check the pharmacy name, address, and <strong>License #</strong> below. You can cross-check the license with your state/regulatory records, or contact the pharmacy by phone/email to confirm. Approve only after you are satisfied they are a legitimate pharmacy.
+      </p>
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
       <div class="card-body p-0 pt-0">
         {% if pending_pharmacies %}
         <table class="table table-hover mb-0">
@@ -101,7 +110,10 @@
               <th>Pharmacy / Email</th>
               <th>Address</th>
               <th>License #</th>
+<<<<<<< HEAD
               <th>License Doc</th>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
               <th>Phone</th>
               <th>Action</th>
             </tr>
@@ -111,8 +123,12 @@
             <tr>
               <td>{{ p.pharmacy_name or p.pharmacy_email }}<br><small class="text-muted">{{ p.pharmacy_email }}</small></td>
               <td>{{ p.address or '—' }}</td>
+<<<<<<< HEAD
               <td><code>{{ p.license_number or '—' }}</code></td>
               <td>{% if p.license_document_path %}<a href="{{ url_for('static', filename=p.license_document_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">View License</a>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+=======
+              <td>{{ p.license_number or '—' }}</td>
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
               <td>{{ p.phone or '—' }}</td>
               <td>
                 <form action="{{ url_for('approve_pharmacy') }}" method="POST" class="d-inline">
@@ -135,6 +151,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <div class="card mb-4 shadow-sm border-success">
     <div class="card-header bg-success text-white">
       <strong>📦 Online Orders (Recent)</strong>
@@ -171,6 +188,8 @@
     </div>
   </div>
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
   <div class="card mb-4 shadow-sm border-danger">
     <div class="card-header bg-danger text-white">
       <strong>🚨 Violations (expired sale attempts & audit tampering)</strong>

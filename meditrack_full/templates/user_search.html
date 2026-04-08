@@ -3,8 +3,11 @@
 <head>
   <title>User Search</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 </head>
 <body class="container mt-3">
   {% include 'navbar.html' %}
@@ -17,6 +20,7 @@
     {% endif %}
   </div>
   <form method="POST" class="mb-3">
+<<<<<<< HEAD
     <input class="form-control" name="search" placeholder="Enter medicine name (e.g. dolo-650, Dolo-650)" value="{{ q_prefill or '' }}" required>
     <button class="btn btn-info mt-2">Search</button>
   </form>
@@ -32,6 +36,11 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
   {% endif %}
+=======
+    <input class="form-control" name="search" placeholder="Enter medicine name" required>
+    <button class="btn btn-info mt-2">Search</button>
+  </form>
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
   <table class="table table-hover">
     <thead class="table-light">
@@ -41,8 +50,11 @@
         <th>Expiry</th>
         <th>Discount</th>
         <th>Pharmacy</th>
+<<<<<<< HEAD
         <th>Location</th>
         <th>Order</th>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
       </tr>
     </thead>
     <tbody>
@@ -61,6 +73,7 @@
           {% endif %}
         </td>
         <td>{{ r.pharmacy_email }}</td>
+<<<<<<< HEAD
         <td>
           {% if r.get('pharmacy_lat') is not none and r.get('pharmacy_lon') is not none %}
           <button type="button" class="btn btn-sm btn-outline-primary view-loc-btn"
@@ -82,10 +95,13 @@
             🛒 Add to Cart
           </button>
         </td>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
       </tr>
       {% endfor %}
     </tbody>
   </table>
+<<<<<<< HEAD
 
   <!-- Email Updates Modal -->
   <div class="modal fade" id="updatesModal" tabindex="-1">
@@ -224,5 +240,7 @@
       });
     });
   </script>
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 </body>
 </html>

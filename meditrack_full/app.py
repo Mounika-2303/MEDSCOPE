@@ -1,6 +1,9 @@
 # app.py
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 from flask import (
     Flask, render_template, request, redirect, url_for, jsonify, Response, send_file, session
 )
@@ -14,7 +17,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from functools import wraps
 import json
+<<<<<<< HEAD
 import re
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
 # ---------------- ENVIRONMENT ---------------- 
 load_dotenv()
@@ -159,6 +165,7 @@ def send_email(to_email, subject, body, cc=None):
             print(f"Email send error ({kind}):", e)
     return False
 
+<<<<<<< HEAD
 
 def send_discount_alerts(medicine_name, discount_value, discount_type, valid_till):
     """Send email alerts to users interested in this medicine when discount is added"""
@@ -206,12 +213,15 @@ MedScope Team
     except Exception as e:
         print("Discount alert error:", e)
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 def send_sms(phone_number, message):
     """Send SMS using free service (placeholder - can use Twilio trial or similar)"""
     # For now, just log it. User can integrate free SMS service later
     print(f"📱 SMS to {phone_number}: {message}")
     return True
 
+<<<<<<< HEAD
 def normalize_medicine_query(s):
     """Normalize for case-insensitive, flexible matching (dolo-650, DOLO650, dolo 650 all match Dolo-650)."""
     if not s:
@@ -219,6 +229,8 @@ def normalize_medicine_query(s):
     return "".join(c for c in str(s).lower().replace(" ", "").replace("-", "") if c.isalnum())
 
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 def haversine(lat1, lon1, lat2, lon2):
     R = 6371.0
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
@@ -286,11 +298,14 @@ def login():
                                 )
                     session["user_email"] = email
                     session["user_role"] = role
+<<<<<<< HEAD
                     session["user_name"] = user_data.get("name") or email.split("@")[0]
                     session["user_phone"] = user_data.get("phone", "")
                     next_url = request.form.get("next") or request.args.get("next") or ""
                     if next_url and next_url.startswith("/"):
                         return redirect(next_url)
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     if role == "admin":
                         return redirect(url_for("admin"))
                     elif role == "pharmacy":
@@ -302,6 +317,7 @@ def login():
             else:
                 return render_template("login.html", error="User not found. Please register first.", role=role)
         else:
+<<<<<<< HEAD
             session["user_email"] = email
             session["user_role"] = role
             session["user_name"] = email.split("@")[0]
@@ -309,6 +325,11 @@ def login():
             next_url = request.form.get("next") or request.args.get("next") or ""
             if next_url and next_url.startswith("/"):
                 return redirect(next_url)
+=======
+            # Fallback for demo
+            session["user_email"] = email
+            session["user_role"] = role
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
             if role == "admin":
                 return redirect(url_for("admin"))
             elif role == "pharmacy":
@@ -317,9 +338,14 @@ def login():
                 return redirect(url_for("user_search"))
     
     role = request.args.get("role", "user")
+<<<<<<< HEAD
     next_param = request.args.get("next", "")
     error_msg = request.args.get("error_msg")
     return render_template("login.html", role=role, error=error_msg, next=next_param)
+=======
+    error_msg = request.args.get("error_msg")
+    return render_template("login.html", role=role, error=error_msg)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -360,6 +386,7 @@ def register():
             if role == "pharmacy":
                 pid = email.replace("@", "_at_").replace(".", "_dot_")
                 license_number = request.form.get("license_number", "").strip()
+<<<<<<< HEAD
                 license_document_path = None
                 license_file = request.files.get("license_document")
                 if license_file and license_file.filename:
@@ -370,6 +397,8 @@ def register():
                         filepath = os.path.join("static", "uploads", "license", safe_name)
                         license_file.save(filepath)
                         license_document_path = f"uploads/license/{safe_name}"
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                 pharm_data = {
                     "pharmacy_email": email,
                     "pharmacy_name": name or email.split("@")[0],
@@ -381,8 +410,11 @@ def register():
                     "pharmacy_status": "pending",  # Must be approved by admin before login
                     "created_at": datetime.now().isoformat(),
                 }
+<<<<<<< HEAD
                 if license_document_path:
                     pharm_data["license_document_path"] = license_document_path
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                 db.collection("pharmacies").document(pid).set(pharm_data, merge=True)
             
             db.collection("users").document(email).set(user_data)
@@ -702,9 +734,13 @@ def upload_pharmacies_csv():
 def user_search():
     results = []
     if request.method == "POST":
+<<<<<<< HEAD
         q_raw = request.form.get("search", "").strip()
         q_norm = normalize_medicine_query(q_raw)
         q_lower = q_raw.lower()
+=======
+        q = request.form.get("search", "").lower().strip()
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
         seen = set()
         if db:
             for d in db.collection("medicines").stream():
@@ -715,6 +751,7 @@ def user_search():
                         continue
                 except Exception:
                     pass
+<<<<<<< HEAD
                 name = item.get("name", "")
                 name_norm = normalize_medicine_query(name)
                 name_lower = name.lower()
@@ -734,10 +771,18 @@ def user_search():
                         item["pharmacy_name"] = p.get("pharmacy_name", item.get("pharmacy_email", ""))
                     item["doc_id"] = d.id
                     item["price"] = float(item.get("price") or 50)
+=======
+                name = item.get("name", "").lower()
+                pharm = item.get("pharmacy_email", "").lower()
+                key = (name, pharm)
+                if q in name and key not in seen:
+                    seen.add(key)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     results.append(item)
         else:
             pharm_df, med_df = load_sample_data()
             for _, row in med_df.iterrows():
+<<<<<<< HEAD
                 name = str(row["medicine_name"])
                 name_norm = normalize_medicine_query(name)
                 name_lower = name.lower()
@@ -1020,13 +1065,33 @@ def pharmacy_order_status():
                         db.collection("medicines").document(doc_id).update({"quantity": max(0, current - qty_sold)})
     return redirect(url_for("pharmacy_orders"))
 
+=======
+                name = str(row["medicine_name"]).lower()
+                pharm = str(row["pharmacy_email"]).lower()
+                key = (name, pharm)
+                if q in name and key not in seen:
+                    seen.add(key)
+                    results.append(
+                        {
+                            "name": row["medicine_name"],
+                            "quantity": int(row["quantity"]),
+                            "expiry": row["expiry_date"],
+                            "pharmacy_email": row["pharmacy_email"],
+                        }
+                    )
+    return render_template("user_search.html", results=results)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
 # ---------------- PHARMACIES API (for map) ---------------- 
 @app.route("/pharmacies_api")
 def pharmacies_api():
+<<<<<<< HEAD
     q_raw = request.args.get("q", "").strip()
     q_lower = q_raw.lower()
     q_norm = normalize_medicine_query(q_raw)
+=======
+    q = request.args.get("q", "").lower().strip()
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
     try:
         user_lat = float(request.args.get("lat", 17.3850))
         user_lon = float(request.args.get("lon", 78.4867))
@@ -1041,10 +1106,15 @@ def pharmacies_api():
             pharm_docs = {d.id: d.to_dict() for d in db.collection("pharmacies").stream()}
             for med_doc in db.collection("medicines").stream():
                 med = med_doc.to_dict()
+<<<<<<< HEAD
                 name = str(med.get("name", ""))
                 name_lower = name.lower()
                 name_norm = normalize_medicine_query(name)
                 if q_raw and q_lower not in name_lower and (not q_norm or q_norm not in name_norm):
+=======
+                name = str(med.get("name", "")).lower()
+                if q and q not in name:
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     continue
                 email = med.get("pharmacy_email", "").strip()
                 if not email:
@@ -1060,8 +1130,11 @@ def pharmacies_api():
                     continue
                 dist = haversine(user_lat, user_lon, lat, lon)
                 if dist <= radius_km:
+<<<<<<< HEAD
                     unit_price = float(med.get("price") or 50)
                     effective_price, _ = apply_discount(unit_price, med)
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     results.append(
                         {
                             "name": med.get("name"),
@@ -1073,8 +1146,11 @@ def pharmacies_api():
                             "lon": lon,
                             "address": pharm.get("address", ""),
                             "distance": round(dist, 2),
+<<<<<<< HEAD
                             "doc_id": med_doc.id,
                             "price": effective_price,
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                         }
                     )
         else:
@@ -1082,10 +1158,15 @@ def pharmacies_api():
             med_df["pharmacy_email"] = med_df["pharmacy_email"].astype(str).str.strip()
             pharm_df["pharmacy_email"] = pharm_df["pharmacy_email"].astype(str).str.strip()
             for _, row in med_df.iterrows():
+<<<<<<< HEAD
                 name = str(row.get("medicine_name", ""))
                 name_lower = name.lower()
                 name_norm = normalize_medicine_query(name)
                 if q_raw and q_lower not in name_lower and (not q_norm or q_norm not in name_norm):
+=======
+                name = str(row.get("medicine_name", "")).lower()
+                if q and q not in name:
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     continue
                 email = row.get("pharmacy_email", "")
                 prow = pharm_df[pharm_df["pharmacy_email"] == email]
@@ -1095,7 +1176,10 @@ def pharmacies_api():
                 lon = float(prow.iloc[0]["lon"])
                 dist = haversine(user_lat, user_lon, lat, lon)
                 if dist <= radius_km:
+<<<<<<< HEAD
                     doc_id = f"{row.get('medicine_name','')}_{row.get('batch_no','')}_{email}".replace(" ", "_").replace("__", "_").strip("_") or f"{row.get('medicine_name','')}_{email}".replace(" ", "_")
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                     results.append(
                         {
                             "name": row.get("medicine_name"),
@@ -1107,8 +1191,11 @@ def pharmacies_api():
                             "lon": lon,
                             "address": prow.iloc[0].get("address", ""),
                             "distance": round(dist, 2),
+<<<<<<< HEAD
                             "doc_id": doc_id,
                             "price": 50,
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                         }
                     )
 
@@ -1461,7 +1548,10 @@ def pharmacy_discount_set():
         "discount_type": discount_type,
         "discount_valid_till": discount_valid_till,
     })
+<<<<<<< HEAD
     send_discount_alerts(med.get("name"), val, discount_type, discount_valid_till)
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
     after_discount = {"discount_value": val, "discount_type": discount_type, "discount_valid_till": discount_valid_till}
     try:
         import blockchain_audit
@@ -1477,11 +1567,14 @@ def pharmacy_discount_set():
     })
 
 
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 @app.route("/pharmacy/discount/remove", methods=["POST"])
 @login_required(role="pharmacy")
 def pharmacy_discount_remove():
@@ -1555,7 +1648,10 @@ def admin():
     alerts = []
     pending_pharmacies = []
     violations_list = []
+<<<<<<< HEAD
     orders_list = []
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
     if db:
         for d in db.collection("medicines").stream():
@@ -1574,6 +1670,7 @@ def admin():
                 data["pid"] = d.id
                 pending_pharmacies.append(data)
 
+<<<<<<< HEAD
         try:
             _DESC = 2  # Firestore DESCENDING
             for v in db.collection("violations").order_by("attempted_on", direction=_DESC).limit(100).stream():
@@ -1587,6 +1684,11 @@ def admin():
             o["order_id"] = d.id
             orders_list.append(o)
         orders_list.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+=======
+        for v in db.collection("violations").limit(100).stream():
+            violations_list.append(v.to_dict())
+        violations_list.sort(key=lambda x: (x.get("attempted_on") or ""), reverse=True)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
     else:
         pharm_df, med_df = load_sample_data()
         for _, row in med_df.iterrows():
@@ -1594,7 +1696,11 @@ def admin():
             meds.append({"name": row["medicine_name"], "quantity": int(row["quantity"]), "expiry": row["expiry_date"], "pharmacy_email": row["pharmacy_email"], "status": st})
             counts[st] = counts.get(st, 0) + 1
 
+<<<<<<< HEAD
     return render_template("admin_dashboard.html", medicines=meds, counts=counts, alerts=alerts, pending_pharmacies=pending_pharmacies, violations=violations_list, orders_list=orders_list)
+=======
+    return render_template("admin_dashboard.html", medicines=meds, counts=counts, alerts=alerts, pending_pharmacies=pending_pharmacies, violations=violations_list)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
 
 @app.route("/admin/approve_pharmacy", methods=["POST"])
@@ -1771,6 +1877,7 @@ def send_expiry_alerts():
     except Exception as e:
         print("❌ Error in alerts job:", e)
 
+<<<<<<< HEAD
 # ---------------- AUTO REMOVE EXPIRED DISCOUNTS ---------------- 
 def remove_expired_discounts():
     """Remove discounts whose discount_valid_till has passed - run daily."""
@@ -1821,11 +1928,22 @@ def admin_run_discount_cleanup():
     """Manually trigger discount cleanup (for testing)."""
     remove_expired_discounts()
     return redirect(url_for("admin"))
+=======
+# ---------------- SCHEDULER ---------------- 
+scheduler = BackgroundScheduler()
+scheduler.add_job(send_expiry_alerts, "cron", hour=9, minute=0)  # Run daily at 9 AM
+scheduler.start()
+atexit.register(lambda: scheduler.shutdown())
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
 # ---------------- MAIN ---------------- 
 if __name__ == "__main__":
     # ensure folders exist
     os.makedirs("static/bills", exist_ok=True)
+<<<<<<< HEAD
     # Start scheduler only once. In debug mode, disable reloader to prevent duplicate schedulers.
     _scheduler = start_scheduler()
     app.run(debug=True, use_reloader=False)
+=======
+    app.run(debug=True)
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54

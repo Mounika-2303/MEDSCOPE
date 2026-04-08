@@ -32,7 +32,11 @@
             <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
             
+<<<<<<< HEAD
             <form method="POST" enctype="multipart/form-data">
+=======
+            <form method="POST">
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
               <input type="hidden" name="role" value="{{ role }}">
               
               <div class="row">
@@ -76,11 +80,14 @@
                   <input type="text" name="license_number" class="form-control" placeholder="e.g. state pharmacy license number">
                 </div>
                 <div class="mb-3">
+<<<<<<< HEAD
                   <label class="form-label">Upload License Document <span class="text-muted">(optional — PDF or image helps admin verify)</span></label>
                   <input type="file" name="license_document" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
                   <small class="text-muted">Admin can view this to verify your license number before approval.</small>
                 </div>
                 <div class="mb-3">
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
                   <label class="form-label">Address</label>
                   <input type="text" name="address" class="form-control" placeholder="Enter pharmacy address">
                 </div>

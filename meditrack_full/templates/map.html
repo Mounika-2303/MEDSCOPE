@@ -29,6 +29,7 @@
     {% endif %}
   </div>
 
+<<<<<<< HEAD
   <!-- Starting Point / Location Controls -->
   <div class="card mb-3 shadow-sm">
     <div class="card-header bg-light"><strong>📍 Starting Point</strong> <small class="text-muted">— Where are you starting from? (for distance calculation)</small></div>
@@ -53,12 +54,23 @@
     </div>
     <div class="col-md-4">
       <button id="searchBtn" class="btn btn-primary w-100">Search & Plot</button>
+=======
+  <!-- Search and Location Controls -->
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <input id="searchInput" class="form-control" placeholder="Enter medicine name (e.g. paracetamol)">
+    </div>
+    <div class="col-md-4 d-flex gap-2">
+      <button id="searchBtn" class="btn btn-primary flex-fill">Search & Plot</button>
+      <button id="locBtn" class="btn btn-secondary flex-fill">Use My Location</button>
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
     </div>
   </div>
 
   <!-- Map -->
   <div id="map"></div>
 
+<<<<<<< HEAD
   <!-- Email Updates Banner (shown after search with results) -->
   <div id="updatesBanner" class="alert alert-info mt-3 d-none" role="alert">
     <strong>📧 Get discount alerts?</strong> 
@@ -66,6 +78,8 @@
     <button type="button" class="btn-close float-end" data-bs-dismiss="alert" onclick="this.closest('.alert').classList.add('d-none')"></button>
   </div>
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
   <script>
   // Default: Hyderabad center
   const defaultCenter = [17.3850, 78.4867];
@@ -104,6 +118,7 @@
     );
   });
 
+<<<<<<< HEAD
   // Geocode address to lat/lon (using OpenStreetMap Nominatim - free, no API key)
   function geocodeAddress(address, callback) {
     if (!address || address.trim().length < 3) {
@@ -137,6 +152,8 @@
     geocodeAddress(addr, () => {});
   });
 
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
   // Button: Search & plot pharmacies
   document.getElementById('searchBtn').addEventListener('click', () => {
     const query = document.getElementById('searchInput').value.trim();
@@ -150,12 +167,17 @@
       .then(data => {
         if (!data.length) {
           alert("No pharmacies found for this medicine nearby.");
+<<<<<<< HEAD
           document.getElementById('updatesBanner').classList.add('d-none');
           return;
         }
         document.getElementById('updatesBanner').classList.remove('d-none');
         const q = document.getElementById('searchInput').value.trim();
         document.getElementById('updatesLink').href = '/user' + (q ? '?q=' + encodeURIComponent(q) : '');
+=======
+          return;
+        }
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
 
         // Remove old markers (keep user marker)
         map.eachLayer(layer => {
@@ -177,16 +199,20 @@
 
           const marker = L.marker([p.lat, p.lon], { icon }).addTo(map);
 
+<<<<<<< HEAD
           const price = p.price || 50;
           const docId = (p.doc_id || '').replace(/"/g, '&quot;');
           const medName = (p.name || '').replace(/"/g, '&quot;');
           const phEmail = (p.pharmacy_email || '').replace(/"/g, '&quot;');
           const phName = (p.pharmacy_name || p.pharmacy_email || '').replace(/"/g, '&quot;');
+=======
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
           marker.bindPopup(`
             <b>${p.pharmacy_name || 'Pharmacy'}</b><br>
             ${p.address || 'Address not available'}<br>
             <b>Medicine:</b> ${p.name}<br>
             <b>Qty:</b> ${p.quantity}<br>
+<<<<<<< HEAD
             <b>Price:</b> Rs.${price}<br>
             <b>Distance:</b> ${p.distance || '?'} km<br>
             <form action="/cart/add" method="POST" class="mt-2">
@@ -198,6 +224,10 @@
               <input type="hidden" name="quantity" value="1">
               <button type="submit" class="btn btn-sm btn-success">Add to Cart</button>
             </form>
+=======
+            <b>Expiry:</b> ${p.expiry || 'N/A'}<br>
+            <b>Distance:</b> ${p.distance || '?'} km
+>>>>>>> 288cb523e87be41f6926f23d221a67c467592a54
           `);
 
           coords.push([p.lat, p.lon]);
