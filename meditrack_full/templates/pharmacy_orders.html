@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orders | Pharmacy | MedScope</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-3">
+  {% include 'navbar.html' %}
+  <h2 class="mb-3">📦 Incoming Orders</h2>
+  {% if not orders %}
+  <div class="alert alert-info">
+    <p class="mb-0">No orders yet. Orders placed by users will appear here.</p>
+  </div>
+  {% else %}
+  {% for o in orders %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+      <span><strong>Order #{{ o.order_id[:8] }}</strong> — {{ o.user_name }} ({{ o.user_email }})</span>
+      <span class="badge {% if o.status == 'delivered' %}bg-success{% elif o.status == 'cancelled' %}bg-secondary{% elif o.status == 'pending' %}bg-warning text-dark{% else %}bg-info{% endif %}">{{ o.status|replace('_',' ') }}</span>
+    </div>
+    <div class="card-body">
+      <p class="mb-1"><strong>📍 Delivery:</strong> {{ o.delivery_address }}</p>
+      <p class="mb-2"><strong>📞 Phone:</strong> {{ o.user_phone or '—' }}</p>
+      <p class="text-muted small mb-2">{{ o.created_at[:19] if o.created_at else '' }}</p>
+      <table class="table table-sm mb-3">
+        <thead><tr><th>Medicine</th><th>Qty</th><th>Price</th></tr></thead>
+        <tbody>
+          {% for item in o['items'] %}
+          <tr>
+            <td>{{ item.medicine_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ "%.2f"|format(item.total) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="fw-bold mb-2">Total: ₹{{ "%.2f"|format(o.total_amount) }}</p>
+      {% if o.status not in ('delivered','cancelled') %}
+      <form method="POST" action="{{ url_for('pharmacy_order_status') }}" class="d-inline">
+        <input type="hidden" name="order_id" value="{{ o.order_id }}">
+        <select name="status" class="form-select form-select-sm d-inline-block w-auto">
+          <option value="confirmed" {% if o.status == 'pending' %}selected{% endif %}>Confirm</option>
+          <option value="ready">Ready for Pickup</option>
+          <option value="out_for_delivery">Out for Delivery</option>
+          <option value="delivered">Mark Delivered</option>
+          <option value="cancelled">Cancel</option>
+        </select>
+        <button type="submit" class="btn btn-sm btn-primary ms-2">Update Status</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

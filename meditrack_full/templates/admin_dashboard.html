@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard | MedScope</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="container mt-3">
+  {% include 'navbar.html' %}
+  <h2>Admin Dashboard</h2>
+
+  <div class="row mb-3">
+    <div class="col-md-4"><div class="alert alert-success">Available: {{ counts['Available'] }}</div></div>
+    <div class="col-md-4"><div class="alert alert-warning">Expiring Soon: {{ counts['Expiring Soon'] }}</div></div>
+    <div class="col-md-4"><div class="alert alert-danger">Expired: {{ counts['Expired'] }}</div></div>
+  </div>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <strong>Medicine Status Distribution</strong>
+    </div>
+    <div class="card-body">
+      <canvas id="statusChart" width="400" height="150"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('statusChart');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Available','Expiring Soon','Expired'],
+        datasets: [{
+          data: [{{ counts['Available'] }}, {{ counts['Expiring Soon'] }}, {{ counts['Expired'] }}],
+          backgroundColor: [
+            '#28a745',  // Green for Available
+            '#ff9800',  // Orange for Expiring Soon
+            '#dc3545'   // Red for Expired
+          ],
+          borderColor: [
+            '#1e7e34',
+            '#f57c00',
+            '#c82333'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  </script>
+
+  <div class="mb-3">
+    <a class="btn btn-outline-primary" href="{{ url_for('export_medicines_csv') }}" title="Download all medicines (name, quantity, expiry, pharmacy, status) as a spreadsheet">Export CSV</a>
+    <small class="text-muted ms-1">— Download all medicines list (name, qty, expiry, pharmacy) as spreadsheet</small>
+    <form action="{{ url_for('admin_send_alerts_now') }}" method="POST" class="d-inline ms-2">
+      <button type="submit" class="btn btn-outline-success">📧 Send expiry alerts now</button>
+    </form>
+    <form action="{{ url_for('admin_run_discount_cleanup') }}" method="POST" class="d-inline ms-2">
+      <button type="submit" class="btn btn-outline-secondary">🏷️ Run discount cleanup now</button>
+    </form>
+    <button type="button" class="btn btn-outline-warning ms-2" id="verifyAuditBtn">🔗 Verify audit chain</button>
+    <span id="verifyAuditResult" class="ms-2"></span>
+    <small class="text-muted ms-2">Use this to test email delivery to pharmacies (expired / expiring soon).</small>
+  </div>
+
+  <div class="card mb-4 shadow-sm border-warning">
+    <div class="card-header bg-warning text-dark">
+      <strong>⏳ Pharmacy approvals</strong>
+      <span class="badge bg-secondary ms-2">{{ pending_pharmacies|length }} pending</span>
+    </div>
+    <div class="card-body">
+      <div class="mb-2">
+        <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#licenseVerifyGuide">📋 How to verify license number</button>
+        <div class="collapse mt-2" id="licenseVerifyGuide">
+          <div class="card card-body small">
+            <strong>Step 1:</strong> Note the <strong>License #</strong> from the table below.<br>
+            <strong>Step 2:</strong> Cross-check with your state pharmacy council / drug control authority:<br>
+            <ul class="mb-1 mt-1">
+              <li><a href="https://pharmacycouncil.telangana.gov.in/" target="_blank" rel="noopener">Telangana State Pharmacy Council</a></li>
+              <li><a href="https://dca.telangana.gov.in/" target="_blank" rel="noopener">Drugs Control Administration (Telangana)</a></li>
+              <li><a href="https://pci.gov.in/" target="_blank" rel="noopener">Pharmacy Council of India (PCI)</a> – national registry</li>
+              <li><a href="https://www.cdsco.gov.in/" target="_blank" rel="noopener">CDSCO (Central Drugs Standard Control Organisation)</a></li>
+            </ul>
+            <strong>Step 3:</strong> If pharmacy uploaded a license document, click "View License" to verify the document matches the license number.<br>
+            <strong>Step 4:</strong> Optionally call the pharmacy to confirm details before approving.
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-0 pt-0">
+        {% if pending_pharmacies %}
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Pharmacy / Email</th>
+              <th>Address</th>
+              <th>License #</th>
+              <th>License Doc</th>
+              <th>Phone</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in pending_pharmacies %}
+            <tr>
+              <td>{{ p.pharmacy_name or p.pharmacy_email }}<br><small class="text-muted">{{ p.pharmacy_email }}</small></td>
+              <td>{{ p.address or '—' }}</td>
+              <td><code>{{ p.license_number or '—' }}</code></td>
+              <td>{% if p.license_document_path %}<a href="{{ url_for('static', filename=p.license_document_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">View License</a>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+              <td>{{ p.phone or '—' }}</td>
+              <td>
+                <form action="{{ url_for('approve_pharmacy') }}" method="POST" class="d-inline">
+                  <input type="hidden" name="pid" value="{{ p.pid }}">
+                  <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                </form>
+                <form action="{{ url_for('reject_pharmacy') }}" method="POST" class="d-inline">
+                  <input type="hidden" name="pid" value="{{ p.pid }}">
+                  <button type="submit" class="btn btn-outline-danger btn-sm">Reject</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted mb-0 p-3">No pending pharmacy approvals. New pharmacy registrations will appear here for approval.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4 shadow-sm border-success">
+    <div class="card-header bg-success text-white">
+      <strong>📦 Online Orders (Recent)</strong>
+    </div>
+    <div class="card-body p-0">
+      {% if orders_list %}
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Pharmacy</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in orders_list[:30] %}
+          <tr>
+            <td><code>{{ o.order_id[:12] }}...</code></td>
+            <td>{{ o.user_name }}<br><small>{{ o.user_email }}</small></td>
+            <td>{{ o.pharmacy_email }}</td>
+            <td>₹{{ "%.2f"|format(o.total_amount) }}</td>
+            <td><span class="badge {% if o.status == 'delivered' %}bg-success{% elif o.status == 'cancelled' %}bg-secondary{% else %}bg-warning text-dark{% endif %}">{{ o.status }}</span></td>
+            <td>{{ (o.created_at or '')[:16] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-muted p-3 mb-0">No orders yet</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card mb-4 shadow-sm border-danger">
+    <div class="card-header bg-danger text-white">
+      <strong>🚨 Violations (expired sale attempts & audit tampering)</strong>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Time</th>
+            <th>Pharmacy / Entity</th>
+            <th>Medicine / Details</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if violations %}
+            {% for v in violations %}
+            <tr>
+              <td>{{ (v.attempted_on or '')[:19] }}</td>
+              <td>{{ v.pharmacy_email or '—' }}</td>
+              <td>{{ v.medicine_name or '—' }}{% if v.get('quantity_attempted') %} (qty: {{ v.quantity_attempted }}){% endif %}</td>
+              <td>{{ v.reason or '—' }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="4" class="text-center text-muted p-3">No violations recorded</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <strong>All Medicines</strong>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Expiry</th>
+            <th>Status</th>
+            <th>Pharmacy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for med in medicines %}
+          <tr class="{% if med.status == 'Expired' %}table-danger{% elif med.status == 'Expiring Soon' %}table-warning{% endif %}">
+            <td>{{ med.name }}</td>
+            <td>{{ med.quantity }}</td>
+            <td>{{ med.expiry }}</td>
+            <td>
+              {% if med.status == 'Expired' %}
+                <span class="badge bg-danger">{{ med.status }}</span>
+              {% elif med.status == 'Expiring Soon' %}
+                <span class="badge bg-warning">{{ med.status }}</span>
+              {% else %}
+                <span class="badge bg-success">{{ med.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ med.pharmacy_email }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr>
+  <h4 class="mt-4 text-primary">📬 Expiry Alert Log (Recent 20)</h4>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-striped">
+        <thead class="table-light">
+          <tr>
+            <th>Medicine</th>
+            <th>Pharmacy</th>
+            <th>Expiry Date</th>
+            <th>Days Left</th>
+            <th>Alert Type</th>
+            <th>Sent On</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if alerts %}
+            {% for a in alerts %}
+            <tr>
+              <td>{{ a.medicine_name }}</td>
+              <td>{{ a.pharmacy_email }}</td>
+              <td>{{ a.expiry_date }}</td>
+              <td>
+                {% if a.days_left < 0 %}
+                  <span class="text-danger fw-bold">{{ a.days_left }} (Expired)</span>
+                {% else %}
+                  {{ a.days_left }}
+                {% endif %}
+              </td>
+              <td>
+                {% if a.alert_type == 'Expired' %}
+                  <span class="badge bg-danger">Expired</span>
+                {% else %}
+                  <span class="badge bg-warning">Expiring Soon</span>
+                {% endif %}
+              </td>
+              <td>{{ a.sent_on.split('T')[0] }} {{ a.sent_on.split('T')[1][:8] if a.sent_on.split('T')|length > 1 else '' }}</td>
+              <td>
+                {% if a.status == 'Sent' %}
+                  <span class="badge bg-success">Sent</span>
+                {% else %}
+                  <span class="badge bg-danger">Failed</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="7" class="text-center text-muted p-3">No alerts logged yet</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('verifyAuditBtn').addEventListener('click', function() {
+      var btn = this;
+      var resultEl = document.getElementById('verifyAuditResult');
+      btn.disabled = true;
+      resultEl.textContent = 'Checking...';
+      fetch('{{ url_for("verify_audit") }}', { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.valid) {
+            resultEl.innerHTML = '<span class="text-success">✓ Chain valid</span>';
+          } else {
+            resultEl.innerHTML = '<span class="text-danger">✗ Tampering at block ' + (data.broken_index != null ? data.broken_index : '?') + '. Violation logged.</span>';
+            setTimeout(function() { window.location.reload(); }, 2000);
+          }
+        })
+        .catch(function() { resultEl.innerHTML = '<span class="text-danger">Request failed</span>'; })
+        .finally(function() { btn.disabled = false; });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

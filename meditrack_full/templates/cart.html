@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cart | MedScope</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-3">
+  {% include 'navbar.html' %}
+  <h2 class="mb-3">🛒 Your Cart</h2>
+  {% if not cart %}
+  <div class="alert alert-info">
+    <p class="mb-0">Your cart is empty. <a href="{{ url_for('user_search') }}">Search medicines</a> to add items.</p>
+  </div>
+  {% else %}
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Medicine</th>
+          <th>Pharmacy</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in cart %}
+        <tr>
+          <td><strong>{{ c.medicine_name }}</strong></td>
+          <td>{{ c.pharmacy_name or c.pharmacy_email }}</td>
+          <td>₹{{ "%.2f"|format(c.unit_price) }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('cart_update') }}" class="d-inline">
+              <input type="hidden" name="doc_id" value="{{ c.doc_id }}">
+              <input type="number" name="quantity" value="{{ c.quantity }}" min="1" class="form-control form-control-sm d-inline-block" style="width: 70px;" onchange="this.form.submit()">
+            </form>
+          </td>
+          <td>₹{{ "%.2f"|format(c.unit_price * c.quantity) }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('cart_remove') }}" class="d-inline" onsubmit="return confirm('Remove from cart?');">
+              <input type="hidden" name="doc_id" value="{{ c.doc_id }}">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <a href="{{ url_for('user_search') }}" class="btn btn-outline-primary">Continue Shopping</a>
+    <div>
+      <strong>Total: ₹{{ "%.2f"|format(total) }}</strong>
+      <a href="{{ url_for('checkout') }}" class="btn btn-success ms-3">Proceed to Checkout</a>
+    </div>
+  </div>
+  <p class="text-muted small mt-2">Login required at checkout for order placement and home delivery.</p>
+  {% endif %}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
