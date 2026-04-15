@@ -5,6 +5,7 @@
 MedScope is a web-based application designed to improve pharmacy management by providing real-time medicine availability, expiry tracking, and intelligent alerts. It helps users find medicines easily, pharmacies manage inventory efficiently, and admins monitor the entire system.
 
 🚀 Features
+
 👤 User
 
 Search medicines across pharmacies
