@@ -70,22 +70,37 @@ APScheduler (Scheduling)
 Pandas
 
 📊 Modules
+
 User Module
+
 Pharmacy Module
+
 Admin Module
+
 Inventory Management
+
 Expiry Alert System
+
 Order & Delivery System
+
 Demand Forecasting
 
 🔄 Workflow
+
 Pharmacy registers and gets verified by admin
+
 Pharmacy uploads medicine inventory
+
 User searches medicines (including map-based search)
+
 Nearby pharmacies are displayed on map
+
 User selects pharmacy and places order
+
 Pharmacy processes order
+
 System tracks delivery
+
 Expiry alerts generated automatically
 
 ⚙️ Installation & Setup
@@ -108,14 +123,21 @@ Currently deployed locally:
 http://localhost:5000/
 
 📌 Future Enhancements
+
 Cloud deployment
+
 Mobile application support
+
 Advanced AI-based demand prediction
+
 Payment integration
 
 👩‍💻 Contributors
+
 Mounika – Backend, Alerts, API Integration
+
 Priyanka – Frontend, UI Design
+
 Bhavya – Database, Testing
 
 📄 License
