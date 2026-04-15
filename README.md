@@ -8,28 +8,40 @@ MedScope is a web-based application designed to improve pharmacy management by p
 👤 User
 
 Search medicines across pharmacies
-Map-based pharmacy search (location-based results) 
+
+Map-based pharmacy search (location-based results)
+
 View real-time availability
+
 Add to cart and place orders
+
 Track delivery status
 
 🏥 Pharmacy
 
 Register and manage inventory
+
 Upload medicine details
+
 Receive and process orders
+
 Get expiry alerts
 
 🛠️ Admin
 
 Verify pharmacy registrations
+
 Monitor system dashboard
+
 View analytics and reports
+
 Demand forecasting
 
 🏗️ System Architecture
 Layered Architecture (Frontend + Backend + Database)
+
 REST API-based communication
+
 Modular design for scalability
 
 🧑‍💻 Tech Stack
