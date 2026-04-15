@@ -125,6 +125,8 @@ http://localhost:5000/
 
 ## 🎥 Demo Video
 
+[Click here to watch demo]
+
 (https://drive.google.com/file/d/1C4lZNrAloVJzif6CEQtLQpCsI7oQiSZh/view)
 
 📌 Future Enhancements
